@@ -1,24 +1,24 @@
-# S05 — Pattern bank (mitigation candidates)
+# S05 - Pattern bank (mitigation candidates)
 
 Ниже оформлены шаблоны мер/паттернов по найденным рискам (R-01, R-03, R-07). Для каждой альтернативы указано: краткое название, что меняем, где меняем и суть решения.
 
 ---
 
-## R-01 — Перехват / reuse JWT / токенов (Spoofing)
+## R-01 - Перехват / reuse JWT / токенов (Spoofing)
 
-Альтернатива 1 — JWT TTL = 15 минут, Refresh TTL = 7 дней
+Альтернатива 1 - JWT TTL = 15 минут, Refresh TTL = 7 дней
 
 - Что меняем: config (TTL параметр)
 - Где: gateway / service
-- Суть: укороченное время жизни access-токена — меньшее окно атаки.
+- Суть: укороченное время жизни access-токена - меньшее окно атаки.
 
-Альтернатива 2 — Key rotation по kid / JWKS
+Альтернатива 2 - Key rotation по kid / JWKS
 
 - Что меняем: политика (KMS / JWKS rotation)
 - Где: service, JWT library
 - Суть: обновление ключей подписи JWT, уменьшается риск использования устаревших/компрометированных ключей.
 
-Альтернатива 3 — mTLS для машинных клиентов
+Альтернатива 3 - mTLS для машинных клиентов
 
 - Что меняем: флаг/политика (требовать mTLS)
 - Где: gateway
@@ -26,21 +26,21 @@
 
 ---
 
-## R-03 — Утечка PII / email через логи, ошибки и input (Info Disclosure)
+## R-03 - Утечка PII / email через логи, ошибки и input (Info Disclosure)
 
-Альтернатива 1 — PII Masking: маскировать email/webhook в логах
+Альтернатива 1 - PII Masking: маскировать email/webhook в логах
 
 - Что меняем: config (masking policy / log formatter)
 - Где: service / logger
 - Суть: email/webhook отображаются в логах в замаскированном виде (например xxx@xxx).
 
-Альтернатива 2 — Retention PII ≤ 30 дней
+Альтернатива 2 - Retention PII ≤ 30 дней
 
 - Что меняем: конфиг retention policy
 - Где: DB, лог-хранилище
 - Суть: автоматическая очистка сырых персональных данных после 30 дней.
 
-Альтернатива 3 — Allowlist для логируемых полей
+Альтернатива 3 - Allowlist для логируемых полей
 
 - Что меняем: логгер / observer (policy)
 - Где: service / gateway
@@ -48,21 +48,21 @@
 
 ---
 
-## R-07 — MITM / подмена внешнего API (Spoofing)
+## R-07 - MITM / подмена внешнего API (Spoofing)
 
-Альтернатива 1 — TLS с проверкой CA для outbound
+Альтернатива 1 - TLS с проверкой CA для outbound
 
 - Что меняем: флаг (require_tls=true)
 - Где: service / gateway
 - Суть: все внешние вызовы разрешены только по HTTPS с валидацией сертификатов.
 
-Альтернатива 2 — mTLS для известных external endpoints
+Альтернатива 2 - mTLS для известных external endpoints
 
 - Что меняем: конфиг сертификатов + требовать mTLS handshake
 - Где: gateway / service
-- Суть: двусторонняя проверка клиента и сервера — существенно усложняет MITM.
+- Суть: двусторонняя проверка клиента и сервера - существенно усложняет MITM.
 
-Альтернатива 3 — Pinned certificates (fingerprints)
+Альтернатива 3 - Pinned certificates (fingerprints)
 
 - Что меняем: политика (pinned_cert list / fingerprint)
 - Где: gateway / service

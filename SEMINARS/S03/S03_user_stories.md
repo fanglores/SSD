@@ -1,4 +1,4 @@
-# S03 — Перечень User Stories
+# S03 - Перечень User Stories
 
 ## US-001 - Управление API-токенами
 

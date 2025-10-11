@@ -31,8 +31,8 @@ Assumptions:
 
 ## Alternatives
 
-- Alt A: Внедрить mTLS для всех trusted endpoints — избыточно для SaaS, требует согласования с партнёрами.
-- Alt B: Certificate Pinning (список известных fingerprint/key) — сложнее администрировать, требует обновления при ротации сертификатов.
+- Alt A: Внедрить mTLS для всех trusted endpoints - избыточно для SaaS, требует согласования с партнёрами.
+- Alt B: Certificate Pinning (список известных fingerprint/key) - сложнее администрировать, требует обновления при ротации сертификатов.
 
 ## Consequences
 
@@ -51,7 +51,7 @@ Then соединение устанавливается только при в�
 
 Чек-лист:
 
-- test: автотесты — выполняется TLS/CA проверка на outbound вызовах
+- test: автотесты - выполняется TLS/CA проверка на outbound вызовах
 - log: все неудачные handshakes с ошибками CA фиксируются в log/error
 - scan/policy: анализ trust list, все endpoints внесены по актуальному CA
 - metric: нет успешных запросов при ошибках handshake/CA

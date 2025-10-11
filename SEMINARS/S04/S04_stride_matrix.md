@@ -1,4 +1,4 @@
-# S04 — STRIDE per element (матрица)
+# S04 - STRIDE per element (матрица)
 
 ## Легенда STRIDE
 

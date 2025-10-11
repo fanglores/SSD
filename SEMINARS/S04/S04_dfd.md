@@ -1,4 +1,4 @@
-# S04 — DFD
+# S04 - DFD
 
 ```mermaid
 flowchart TD
