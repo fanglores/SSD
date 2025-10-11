@@ -11,13 +11,13 @@
 
 - **ФИО:** Цатурьян Константин Артурович
 - **Группа:** МСПИН241
-- **Контакт:** [@fanglores](t.me/fanglores)
+- **Контакт:** [@fanglores](https://t.me/fanglores)
 
 ### Студент 2
 
 - **ФИО:** Дандамаев Гаджи
 - **Группа:** МСПИН241
-- **Контакт:** [@dandamev](t.me/dandamaev)
+- **Контакт:** [@dandamev](https://t.me/dandamaev)
 
 ### Проект: [SSD-Project](https://github.com/fanglores/SSD-project)
 
