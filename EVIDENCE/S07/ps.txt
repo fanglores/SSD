@@ -1,0 +1,2 @@
+NAME      IMAGE                COMMAND                  SERVICE   CREATED                  STATUS                                     PORTS
+seed      secdev-seed:latest   "/bin/sh -c 'python …"   web       Less than a second ago   Up Less than a second (health: starting)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp

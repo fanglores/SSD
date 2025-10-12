@@ -1,0 +1,22 @@
+services:
+  web:
+    build: .
+    image: secdev-seed:latest
+    restart: unless-stopped
+    ports:
+    - 8000:8000
+    environment:
+    - APP_NAME=secdev-seed
+    - DEBUG=true
+    healthcheck:
+      test:
+      - CMD-SHELL
+      - python -c "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/').read()"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    cap_drop:
+    - ALL
+    security_opt:
+    - no-new-privileges:true
+    container_name: seed

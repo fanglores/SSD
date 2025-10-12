@@ -1,0 +1,6 @@
+seed  | DB initialized at /app/app.db
+seed  | INFO:     Started server process [8]
+seed  | INFO:     Waiting for application startup.
+seed  | INFO:     Application startup complete.
+seed  | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+seed  | INFO:     172.18.0.1:41172 - "GET / HTTP/1.1" 200 OK
