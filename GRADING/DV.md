@@ -92,13 +92,11 @@
 
 | Артефакт/лог                    | Путь в `EVIDENCE/`                                    | Комментарий |
 |---------------------------------|--------------------------------------------------------|--------------|
-| Лог успешной сборки/тестов (CI) | [S08/test-report.xml](../EVIDENCE/S08/test-report.xml) | CI build + pytest |
-| Локальный лог сборки            | [S07/build.log](../EVIDENCE/S07/build.log)             | docker build |
-| Логи запуска контейнера         | [S07/run.log](../EVIDENCE/S07/run.log)                 | docker run - 200 OK |
-| Freeze/версии инструментов      | [pip-freeze.txt](../EVIDENCE/pip-freeze.txt)           | воспроизводимость окружения |
-| Отчёт тестов безопасного кода   | [S06/test-report.xml](../EVIDENCE/S06/test-report.xml) | тесты по SQLi/XSS |
-| Инспект контейнера              | [S07/inspect_web.json](../EVIDENCE/S07/inspect_web.json) | структура контейнера |
-| CI-артефакт                     | [S08/ci-run.txt](../EVIDENCE/S08/ci-run.txt)           | URL последнего рана |
+| Лог успешной сборки/тестов (CI) | [S08/ci_tests_run.txt](../EVIDENCE/S08/ci_tests_run.txt) |  |
+| Локальный лог сборки            | [S06/local_tests_run.txt](../EVIDENCE/S06/local_tests_run.txt) |  |
+| Логи запуска контейнера         | [S07/ci_docker_log.txt](../EVIDENCE/S07/ci_docker_log.txt) |  |
+| Freeze/версии инструментов      | [S06/requirements.txt](../EVIDENCE/S06/requirements.txt)  | воспроизводимость окружения |
+| Отчёт тестов                    | [S06/test-report.xml](../EVIDENCE/S06/test-report.xml) |  |
 
 ---
 
@@ -125,11 +123,19 @@
 
 | Тип     | Файл в `EVIDENCE/`                                     | Дата/время         | Коммит/версия | Runner/OS    |
 |---------|----------------------------------------------------------|--------------------|---------------|--------------|
-| CI-лог  | [S08/ci-run.txt](../EVIDENCE/S08/ci-run.txt)            | 2025-10-10 12:43   | `abc123`      | gha-ubuntu   |
-| Лок.лог | [S07/run.log](../EVIDENCE/S07/run.log)                  | 2025-10-10 12:01   | `abc123`      | local-docker |
-| Package | [S07/image-size.txt](../EVIDENCE/S07/image-size.txt)    | 2025-10-10         | `abc123`      | -            |
-| Freeze  | [pip-freeze.txt](../EVIDENCE/pip-freeze.txt)            | 2025-10-10         | `abc123`      | -            |
-| Grep    | [S07/grep-secrets.txt](../EVIDENCE/S07/grep-secrets.txt) | 2025-10-10         | `abc123`      | -            |
+| CI-log | [S08/ci_tests_run.txt](../EVIDENCE/S08/ci_tests_run.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | gha-ubuntu |
+| Local log | [S06/local_tests_run.txt](../EVIDENCE/S06/local_tests_run.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | win11 24h2 |
+| Freeze | [S06/requirements.txt](../EVIDENCE/S06/requirements.txt) | 2025-11-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | - |
+| Dcoker log | [S07/ci_docker_log.txt](../EVIDENCE/S07/ci_docker_log.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| Tests report | [S06/test-report.xml](../EVIDENCE/S06/test-report.xml) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| Secrets check | [S06/ci_precommit.txt](../EVIDENCE/S06/ci_precommit.txt) | 2025-18-10  | `dbb2c10d367246c8169f40ba8590820a69da4035` | local/ubuntu |
+| Dockerfile | [Dockerfile](../EVIDENCE/S07/Dockerfile) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| docker-compose | [docker-compose.yml](../EVIDENCE/S07/docker-compose.yml) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| docker image size | [image-size.txt](../EVIDENCE/S07/image-size.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| compose log | [compose-up.log](../EVIDENCE/S07/compose-up.log) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| docker ps | [ps.txt](../EVIDENCE/S07/ps.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| healt check | [http_root_code.txt](../EVIDENCE/S07/http_root_code.txt) | 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
+| healt check | [http_root_last_error.txt](../EVIDENCE/S07/http_root_last_error.txt)| 2025-10-10 | `8f63fe435045a592a0a55715721cfc50c732f474` | ubuntu |
 
 ---
 
@@ -149,3 +155,6 @@
 - **DV5. Секреты и конфигурация окружения (гигиена):** [ ] 0 [ ] 1 [x] 2 
 
 **Итог DV (сумма):** **10/10**
+
+А ещё у нас все сделано через PR и совместные коммиты в данном репозитории!  
+А программный проект максимально настроен, работа через PR, настроен CI с прекоммитом, всеми проверками.
