@@ -1,0 +1,144 @@
+Run set -o pipefail
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.19kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12-slim
+#2 DONE 1.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 152B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 6.82kB done
+#5 DONE 0.0s
+
+#6 [1/7] FROM docker.io/library/python:3.12-slim@sha256:1aa78876248db92b67d93d039d3149e5fe01a979665bc0f33594ceb74c6720c1
+#6 resolve docker.io/library/python:3.12-slim@sha256:1aa78876248db92b67d93d039d3149e5fe01a979665bc0f33594ceb74c6720c1 done
+#6 sha256:beee69a447f51566a9eb35a1ce5f0b98fcaca995ffa4317be02ee1ce864d33b8 1.75kB / 1.75kB done
+#6 sha256:26ef4fe66ef23f401facd721c2794a8eb9b0f97b1c44c9ac98052e6c441a580d 5.58kB / 5.58kB done
+#6 sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 1.05MB / 29.78MB 0.1s
+#6 sha256:2d939f7b801c4b30dd7e958d99d18e61c6ebbcab6a254abcbcfbd2678d780bfd 0B / 4.25MB 0.1s
+#6 sha256:1dd1df8954c91ccf128b1b667f07b2317759315a368ec7f106a2a803bc71802d 0B / 12.11MB 0.1s
+#6 sha256:1aa78876248db92b67d93d039d3149e5fe01a979665bc0f33594ceb74c6720c1 10.37kB / 10.37kB done
+#6 sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 24.12MB / 29.78MB 0.2s
+#6 sha256:2d939f7b801c4b30dd7e958d99d18e61c6ebbcab6a254abcbcfbd2678d780bfd 2.10MB / 4.25MB 0.2s
+#6 sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 29.78MB / 29.78MB 0.2s done
+#6 sha256:2d939f7b801c4b30dd7e958d99d18e61c6ebbcab6a254abcbcfbd2678d780bfd 4.25MB / 4.25MB 0.2s done
+#6 sha256:1dd1df8954c91ccf128b1b667f07b2317759315a368ec7f106a2a803bc71802d 12.11MB / 12.11MB 0.3s
+#6 extracting sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 0.1s
+#6 sha256:61aaec5bfd48bb70aea7705aa27ecaba298d628393bce46603723a8a12d62c51 0B / 250B 0.3s
+#6 sha256:1dd1df8954c91ccf128b1b667f07b2317759315a368ec7f106a2a803bc71802d 12.11MB / 12.11MB 0.3s done
+#6 sha256:61aaec5bfd48bb70aea7705aa27ecaba298d628393bce46603723a8a12d62c51 250B / 250B 0.3s done
+#6 extracting sha256:8c7716127147648c1751940b9709b6325f2256290d3201662eca2701cadb2cdf 0.9s done
+#6 extracting sha256:2d939f7b801c4b30dd7e958d99d18e61c6ebbcab6a254abcbcfbd2678d780bfd 0.1s
+#6 extracting sha256:2d939f7b801c4b30dd7e958d99d18e61c6ebbcab6a254abcbcfbd2678d780bfd 0.1s done
+#6 extracting sha256:1dd1df8954c91ccf128b1b667f07b2317759315a368ec7f106a2a803bc71802d
+#6 extracting sha256:1dd1df8954c91ccf128b1b667f07b2317759315a368ec7f106a2a803bc71802d 0.5s done
+#6 extracting sha256:61aaec5bfd48bb70aea7705aa27ecaba298d628393bce46603723a8a12d62c51
+#6 extracting sha256:61aaec5bfd48bb70aea7705aa27ecaba298d628393bce46603723a8a12d62c51 done
+#6 DONE 2.0s
+
+#7 [2/7] WORKDIR /app
+#7 DONE 0.0s
+
+#8 [3/7] COPY requirements.txt ./
+#8 DONE 0.0s
+
+#9 [4/7] RUN pip install --no-cache-dir -r requirements.txt
+#9 1.284 Collecting fastapi==0.115.0 (from -r requirements.txt (line 2))
+#9 1.302   Downloading fastapi-0.115.0-py3-none-any.whl.metadata (27 kB)
+#9 1.328 Collecting uvicorn==0.30.1 (from -r requirements.txt (line 3))
+#9 1.332   Downloading uvicorn-0.30.1-py3-none-any.whl.metadata (6.3 kB)
+#9 1.344 Collecting jinja2==3.1.4 (from -r requirements.txt (line 4))
+#9 1.347   Downloading jinja2-3.1.4-py3-none-any.whl.metadata (2.6 kB)
+#9 1.435 Collecting pydantic==2.9.2 (from -r requirements.txt (line 5))
+#9 1.438   Downloading pydantic-2.9.2-py3-none-any.whl.metadata (149 kB)
+#9 1.473 Collecting pytest==8.3.2 (from -r requirements.txt (line 6))
+#9 1.475   Downloading pytest-8.3.2-py3-none-any.whl.metadata (7.5 kB)
+#9 1.503 Collecting httpx==0.27.2 (from -r requirements.txt (line 7))
+#9 1.506   Downloading httpx-0.27.2-py3-none-any.whl.metadata (7.1 kB)
+#9 1.532 Collecting starlette<0.39.0,>=0.37.2 (from fastapi==0.115.0->-r requirements.txt (line 2))
+#9 1.536   Downloading starlette-0.38.6-py3-none-any.whl.metadata (6.0 kB)
+#9 1.574 Collecting typing-extensions>=4.8.0 (from fastapi==0.115.0->-r requirements.txt (line 2))
+#9 1.577   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+#9 1.591 Collecting click>=7.0 (from uvicorn==0.30.1->-r requirements.txt (line 3))
+#9 1.594   Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+#9 1.600 Collecting h11>=0.8 (from uvicorn==0.30.1->-r requirements.txt (line 3))
+#9 1.603   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#9 1.645 Collecting MarkupSafe>=2.0 (from jinja2==3.1.4->-r requirements.txt (line 4))
+#9 1.647   Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+#9 1.654 Collecting annotated-types>=0.6.0 (from pydantic==2.9.2->-r requirements.txt (line 5))
+#9 1.657   Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+#9 2.144 Collecting pydantic-core==2.23.4 (from pydantic==2.9.2->-r requirements.txt (line 5))
+#9 2.148   Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.6 kB)
+#9 2.159 Collecting iniconfig (from pytest==8.3.2->-r requirements.txt (line 6))
+#9 2.162   Downloading iniconfig-2.1.0-py3-none-any.whl.metadata (2.7 kB)
+#9 2.173 Collecting packaging (from pytest==8.3.2->-r requirements.txt (line 6))
+#9 2.176   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+#9 2.184 Collecting pluggy<2,>=1.5 (from pytest==8.3.2->-r requirements.txt (line 6))
+#9 2.203   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+#9 2.217 Collecting anyio (from httpx==0.27.2->-r requirements.txt (line 7))
+#9 2.220   Downloading anyio-4.11.0-py3-none-any.whl.metadata (4.1 kB)
+#9 2.236 Collecting certifi (from httpx==0.27.2->-r requirements.txt (line 7))
+#9 2.238   Downloading certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
+#9 2.252 Collecting httpcore==1.* (from httpx==0.27.2->-r requirements.txt (line 7))
+#9 2.256   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+#9 2.266 Collecting idna (from httpx==0.27.2->-r requirements.txt (line 7))
+#9 2.268   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+#9 2.275 Collecting sniffio (from httpx==0.27.2->-r requirements.txt (line 7))
+#9 2.278   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+#9 2.312 Downloading fastapi-0.115.0-py3-none-any.whl (94 kB)
+#9 2.316 Downloading uvicorn-0.30.1-py3-none-any.whl (62 kB)
+#9 2.320 Downloading jinja2-3.1.4-py3-none-any.whl (133 kB)
+#9 2.323 Downloading pydantic-2.9.2-py3-none-any.whl (434 kB)
+#9 2.329 Downloading pytest-8.3.2-py3-none-any.whl (341 kB)
+#9 2.335 Downloading httpx-0.27.2-py3-none-any.whl (76 kB)
+#9 2.338 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+#9 2.343 Downloading pydantic_core-2.23.4-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+#9 2.355    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 195.4 MB/s eta 0:00:00
+#9 2.358 Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+#9 2.361 Downloading click-8.3.0-py3-none-any.whl (107 kB)
+#9 2.364 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#9 2.367 Downloading markupsafe-3.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+#9 2.370 Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+#9 2.373 Downloading starlette-0.38.6-py3-none-any.whl (71 kB)
+#9 2.376 Downloading anyio-4.11.0-py3-none-any.whl (109 kB)
+#9 2.379 Downloading idna-3.10-py3-none-any.whl (70 kB)
+#9 2.382 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+#9 2.385 Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+#9 2.388 Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+#9 2.391 Downloading iniconfig-2.1.0-py3-none-any.whl (6.0 kB)
+#9 2.394 Downloading packaging-25.0-py3-none-any.whl (66 kB)
+#9 2.449 Installing collected packages: typing-extensions, sniffio, pluggy, packaging, MarkupSafe, iniconfig, idna, h11, click, certifi, annotated-types, uvicorn, pytest, pydantic-core, jinja2, httpcore, anyio, starlette, pydantic, httpx, fastapi
+#9 3.665 Successfully installed MarkupSafe-3.0.3 annotated-types-0.7.0 anyio-4.11.0 certifi-2025.10.5 click-8.3.0 fastapi-0.115.0 h11-0.16.0 httpcore-1.0.9 httpx-0.27.2 idna-3.10 iniconfig-2.1.0 jinja2-3.1.4 packaging-25.0 pluggy-1.6.0 pydantic-2.9.2 pydantic-core-2.23.4 pytest-8.3.2 sniffio-1.3.1 starlette-0.38.6 typing-extensions-4.15.0 uvicorn-0.30.1
+#9 3.665 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#9 DONE 3.8s
+
+#10 [5/7] COPY app ./app
+#10 DONE 0.0s
+
+#11 [6/7] COPY scripts ./scripts
+#11 DONE 0.0s
+
+#12 [7/7] RUN useradd -m -u 10001 appuser && chown -R appuser:appuser /app
+#12 DONE 0.2s
+
+#13 exporting to image
+#13 exporting layers
+#13 exporting layers 0.9s done
+#13 writing image sha256:a15820f0a4edf887ebc3f8fe27771e92a798115af705755735f928a8ae83fdbd done
+#13 naming to docker.io/library/secdev-seed:latest done
+#13 DONE 0.9s
+
+ 1 warning found (use docker --debug to expand):
+ - JSONArgsRecommended: JSON arguments recommended for CMD to prevent unintended behavior related to OS signals (line 25)
