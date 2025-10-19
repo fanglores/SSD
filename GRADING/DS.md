@@ -8,26 +8,54 @@
 
 ## 0) Мета
 
-- **Проект (опционально BYO):** TODO: ссылка / «учебный шаблон»
-- **Версия (commit/date):** TODO: abc123 / YYYY-MM-DD
-- **Кратко (1-2 предложения):** TODO: что сканируется и какие меры харднинга планируются
+- **Проект**: [SSD-Project](https://github.com/Dandamaev/ssd-project-s09-s12)
+- **Версия (commit/date):** `v1` / `2025-19-10`
+- **Кратко (1-2 предложения):** FastAPI-приложение с демонстрацией DevSecOps-практик, предназначенное для изучения безопасности и управления зависимостями.
 
 ---
 
 ## 1) SBOM и уязвимости зависимостей (DS1)
 
-- **Инструмент/формат:** TODO: Syft/Grype/OSV; CycloneDX/SPDX
+- **Инструмент/формат:** CycloneDX 1.6, Grype v0.101.1 для SCA
+
 - **Как запускал:**
 
   ```bash
-  syft dir:. -o cyclonedx-json > EVIDENCE/sbom-YYYY-MM-DD.json
-  grype sbom:EVIDENCE/sbom-YYYY-MM-DD.json --fail-on high -o json > EVIDENCE/deps-YYYY-MM-DD.json
+  # Generate SBOM with Syft
+  scan dir:. -o cyclonedx-json > EVIDENCE/S09/sbom.json
+
+  # Run SCA with Grype
+  grype sbom:EVIDENCE/S09/sbom.json --fail-on high -o json > EVIDENCE/S09/sca_report.json
   ```
 
-- **Отчёты:** `EVIDENCE/sbom-YYYY-MM-DD.json`, `EVIDENCE/deps-YYYY-MM-DD.json`
-- **Выводы (кратко):** TODO: сколько Critical/High, ключевые пакеты/лицензии
-- **Действия:** TODO: что исправлено/обновлено **или** что временно подавлено (ниже в триаже)
-- **Гейт по зависимостям:** TODO: правило в словах (например, «Critical=0; High≤1»)
+- **Отчёты:**
+
+  - SBOM: `EVIDENCE/S09/sbom.json`
+  - SCA Report: `EVIDENCE/S09/sca_report.json`
+  - CI/CD: [GitHub Actions Job](https://github.com/Dandamaev/ssd-project-s09-s12/actions/runs/18632150076/job/53118368830)
+
+- **Выводы (кратко):**
+
+  - Найдены уязвимости в Jinja2 3.1.4:
+    - 2 Medium (GHSA-q2x7-8rv6-6q7h, GHSA-cpwx-vrp4-4pq7) — sandbox breakout через format method
+    - 1 High (CVE-2024-56201) — RCE через malicious filenames
+  - Ключевые зависимости:
+    - fastapi=0.115.0
+    - jinja2=3.1.4 (требует обновления до 3.1.6)
+    - uvicorn=0.30.1
+    - httpx=0.27.2
+    - pydantic=2.9.2
+    - pytest=8.3.2
+
+- **Действия:**
+
+  - Требуется обновление jinja2 до версии 3.1.6 для устранения всех найденных уязвимостей
+  - Остальные зависимости актуальны и не содержат известных уязвимостей
+  - Добавлен автоматический CI check через GitHub Actions
+
+- **Гейт по зависимостям:**
+  - Critical=0
+  - High≤1 (временно допускается одна High в jinja2 до планового обновления)
 
 ---
 
@@ -35,28 +63,34 @@
 
 ### 2.1 SAST
 
-- **Инструмент/профиль:** TODO: semgrep?
+- **Инструмент/профиль:** Semgrep OSS v1.138.0 с профилем p/ci
+
 - **Как запускал:**
 
   ```bash
-  semgrep --config p/ci --severity=high --error --json --output EVIDENCE/sast-YYYY-MM-DD.json
+  semgrep --config p/ci --severity=high --error --sarif --output EVIDENCE/S10/semgrep.sarif
   ```
 
-- **Отчёт:** `EVIDENCE/sast-YYYY-MM-DD.*`
-- **Выводы:** TODO: 1-2 ключевых находки (TP/FP), области риска
+- **Отчёт:** `EVIDENCE/S10/semgrep.sarif`
+- **Выводы:**
+  - Сканирование успешно выполнено
+  - Критических уязвимостей и проблем с качеством кода не обнаружено
+  - Профиль p/ci покрывает основные паттерны безопасности Python
 
 ### 2.2 Secrets scanning
 
-- **Инструмент:** TODO: gitleaks?
+- **Инструмент:** Gitleaks (последняя версия)
 - **Как запускал:**
 
   ```bash
-  gitleaks detect --no-git --report-format json --report-path EVIDENCE/secrets-YYYY-MM-DD.json
-  gitleaks detect --log-opts="--all" --report-format json --report-path EVIDENCE/secrets-YYYY-MM-DD-history.json
+  gitleaks detect --no-git --report-format json --report-path EVIDENCE/S10/gitleaks.json
   ```
 
-- **Отчёт:** `EVIDENCE/secrets-YYYY-MM-DD.*`
-- **Выводы:** TODO: есть ли истинные срабатывания; меры (ревок/ротация/очистка истории)
+- **Отчёт:** `EVIDENCE/S10/gitleaks.json`
+- **Выводы:**
+  - Сканирование успешно выполнено
+  - Секретов и чувствительных данных в репозитории не обнаружено
+  - CI/CD: [GitHub Actions Job](https://github.com/Dandamaev/ssd-project-s09-s12/actions/runs/18635149386)
 
 ---
 
@@ -113,9 +147,10 @@
 
 - **Пороговые правила (словами):**  
   Примеры: «SCA: Critical=0; High≤1», «SAST: Critical=0», «Secrets: 0 истинных находок», «Policy: Violations=0».
-- **Как проверяются:**  
-  - Ручной просмотр (какие файлы/строки) **или**  
-  - Автоматически:  (скрипт/job, условие fail при нарушении)
+- **Как проверяются:**
+
+  - Ручной просмотр (какие файлы/строки) **или**
+  - Автоматически: (скрипт/job, условие fail при нарушении)
 
     ```bash
     SCA: grype ... --fail-on high
@@ -136,11 +171,11 @@
 
 ## 6) Триаж-лог (fixed / suppressed / open)
 
-| ID/Anchor       | Класс     | Severity | Статус     | Действие | Evidence                               | Ссылка на фикс/исключение         | Комментарий / owner / expiry |
-|-----------------|-----------|----------|------------|----------|----------------------------------------|-----------------------------------|------------------------------|
-| CVE-2024-XXXX   | SCA       | High     | fixed      | bump     | `EVIDENCE/deps-YYYY-MM-DD.json#CVE`    | `commit abc123`                   | -                            |
-| ZAP-123         | DAST      | Medium   | suppressed | ignore   | `EVIDENCE/dast-YYYY-MM-DD.pdf#123`     | `EVIDENCE/suppressions.yml#zap`   | FP; owner: ФИО; expiry: 2025-12-31 |
-| SAST-77         | SAST      | High     | open       | backlog  | `EVIDENCE/sast-YYYY-MM-DD.*#77`        | issue-link                        | план фикса в релизе N        |
+| ID/Anchor     | Класс | Severity | Статус     | Действие | Evidence                            | Ссылка на фикс/исключение       | Комментарий / owner / expiry       |
+| ------------- | ----- | -------- | ---------- | -------- | ----------------------------------- | ------------------------------- | ---------------------------------- |
+| CVE-2024-XXXX | SCA   | High     | fixed      | bump     | `EVIDENCE/deps-YYYY-MM-DD.json#CVE` | `commit abc123`                 | -                                  |
+| ZAP-123       | DAST  | Medium   | suppressed | ignore   | `EVIDENCE/dast-YYYY-MM-DD.pdf#123`  | `EVIDENCE/suppressions.yml#zap` | FP; owner: ФИО; expiry: 2025-12-31 |
+| SAST-77       | SAST  | High     | open       | backlog  | `EVIDENCE/sast-YYYY-MM-DD.*#77`     | issue-link                      | план фикса в релизе N              |
 
 > Для «2» по DS5 обязательно указывать **owner/expiry/обоснование** для подавлений.
 
@@ -148,12 +183,12 @@
 
 ## 7) Эффект «до/после» (метрики) (DS4/DS5)
 
-| Контроль/Мера | Метрика                 | До   | После | Evidence (до), (после)                          |
-|---------------|-------------------------|-----:|------:|-------------------------------------------------|
-| Зависимости   | #Critical / #High (SCA) | TODO | 0 / ≤1| `EVIDENCE/deps-before.json`, `deps-after.json`  |
-| SAST          | #Critical / #High       | TODO | 0 / ≤1| `EVIDENCE/sast-before.*`, `sast-after.*`        |
-| Secrets       | Истинные находки        | TODO | 0     | `EVIDENCE/secrets-*.json`                       |
-| Policy/IaC    | Violations              | TODO | 0     | `EVIDENCE/checkov-before.txt`, `checkov-after.txt` |
+| Контроль/Мера | Метрика                 |   До |  После | Evidence (до), (после)                             |
+| ------------- | ----------------------- | ---: | -----: | -------------------------------------------------- |
+| Зависимости   | #Critical / #High (SCA) | TODO | 0 / ≤1 | `EVIDENCE/deps-before.json`, `deps-after.json`     |
+| SAST          | #Critical / #High       | TODO | 0 / ≤1 | `EVIDENCE/sast-before.*`, `sast-after.*`           |
+| Secrets       | Истинные находки        | TODO |      0 | `EVIDENCE/secrets-*.json`                          |
+| Policy/IaC    | Violations              | TODO |      0 | `EVIDENCE/checkov-before.txt`, `checkov-after.txt` |
 
 ---
 
@@ -172,10 +207,10 @@
 
 ## 10) Самооценка по рубрике DS (0/1/2)
 
-- **DS1. SBOM и SCA:** [ ] 0 [ ] 1 [ ] 2  
-- **DS2. SAST + Secrets:** [ ] 0 [ ] 1 [ ] 2  
-- **DS3. DAST или Policy (Container/IaC):** [ ] 0 [ ] 1 [ ] 2  
-- **DS4. Харднинг (доказуемый):** [ ] 0 [ ] 1 [ ] 2  
-- **DS5. Quality-gates, триаж и «до/после»:** [ ] 0 [ ] 1 [ ] 2  
+- **DS1. SBOM и SCA:** [ ] 0 [ ] 1 [ ] 2
+- **DS2. SAST + Secrets:** [ ] 0 [ ] 1 [ ] 2
+- **DS3. DAST или Policy (Container/IaC):** [ ] 0 [ ] 1 [ ] 2
+- **DS4. Харднинг (доказуемый):** [ ] 0 [ ] 1 [ ] 2
+- **DS5. Quality-gates, триаж и «до/после»:** [ ] 0 [ ] 1 [ ] 2
 
-**Итог DS (сумма):** __/10
+**Итог DS (сумма):** \_\_/10
