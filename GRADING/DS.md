@@ -100,30 +100,109 @@
 
 ### Вариант A - DAST (лайт)
 
-- **Инструмент/таргет:** TODO (локальный стенд/демо-контейнер допустим)
-- **Как запускал:**
+- **Инструмент/таргет:** OWASP ZAP (ZAP Baseline Scan) — ZAP v2.16.1
+- **Как запускал (локально через Docker):**
 
-  ```bash
-  zap-baseline.py -t http://127.0.0.1:8080 -m 3 \
-    -r EVIDENCE/dast-YYYY-MM-DD.html -J EVIDENCE/dast-YYYY-MM-DD.json
-  ```
+```bash
+# запущено локально через docker (user)
+docker run --rm -v %cd%:/zap/wrk \
+  zaproxy/zap-stable \
+  zap-baseline.py -t http://host.docker.internal:8080 \
+  -r EVIDENCE/S11/zap_baseline.html \
+  -J EVIDENCE/S11/zap_baseline.json -d
+```
 
-- **Отчёт:** `EVIDENCE/dast-YYYY-MM-DD.pdf#alert-...`
-- **Выводы:** TODO: 1-2 meaningful наблюдения
+- **Отчёты / Артефакты:**
+
+  - HTML: `EVIDENCE/S11/zap_baseline.html`
+  - JSON: `EVIDENCE/S11/zap_baseline.json`
+  - Scan config used (baseline job): `EVIDENCE/S11/zap.yaml`
+
+- **Краткая сводка (из zap_baseline.json / html):**
+
+  - High: 0
+  - Medium: 2
+  - Low: 3
+  - Informational: 3
+
+- **Основные Medium‑alerts (рекомендуемые исправления):**
+
+  - Content Security Policy (CSP) Header Not Set — pluginId 10038 — instances: 4  
+    → Action: добавить / настроить Content-Security-Policy (backend / web server). Evidence: `EVIDENCE/S11/zap_baseline.json#10038` / `EVIDENCE/S11/zap_baseline.html#10038`
+  - Missing Anti-clickjacking Header (X-Frame-Options / frame-ancestors) — pluginId 10020 — instances: 3  
+    → Action: добавить X-Frame-Options: DENY или CSP frame-ancestors (backend). Evidence: `EVIDENCE/S11/zap_baseline.json#10020` / `EVIDENCE/S11/zap_baseline.html#10020`
+
+- **Выводы (кратко):**
+
+  - Сканы выполнены успешно локально; основные находки — отсутствие/недостаток security headers. Это типичные конфигурационные замечания для demo‑приложения.
+  - Нет критичных (High) уязвимостей по результатам базового скана.
+  - Рекомендуется исправить security headers и повторно запустить ZAP для валидации.
+
+- **Действия / Owner / Проверка:**
+
+  - Owner: Backend Team
+  - Действие: внедрить CSP, X-Frame-Options / frame-ancestors, X-Content-Type-Options; затем повторный ZAP baseline.
+  - Проверка: re-run ZAP baseline; compare `EVIDENCE/S11/zap_baseline.json` до/после.
+
+- **CI/CD Actions:** [GitHub Actions Job](https://github.com/Dandamaev/ssd-project-s09-s12/actions/runs/18658048855)
 
 ### Вариант B - Policy / Container / IaC
 
-- **Инструмент(ы):** TODO (trivy config / checkov / conftest и т.п.)
+- **Инструмент(ы):**
+
+  - Trivy v0.48.0 (container/config scanning для образов и IaC)
+
 - **Как запускал:**
 
-  ```bash
-  trivy image --severity HIGH,CRITICAL --exit-code 1 <image:tag> > EVIDENCE/policy-YYYY-MM-DD.txt
-  trivy config . --severity HIGH,CRITICAL --exit-code 1 --format table > EVIDENCE/trivy-YYYY-MM-DD.txt
-  checkov -d . -o cli > EVIDENCE/checkov-YYYY-MM-DD.txt
+  ```powershell
+  # Config scan
+  docker run --rm -v "${PWD}:/workdir" -w /workdir aquasec/trivy:latest config `
+    --format table `
+    --severity HIGH,CRITICAL `
+    --output EVIDENCE/S11/trivy-config.txt .
+
+  # Image scan
+  docker run --rm -v "${PWD}:/workdir" -v /var/run/docker.sock:/var/run/docker.sock -w /workdir `
+    aquasec/trivy:latest image `
+    --format table `
+    --severity HIGH,CRITICAL `
+    --output EVIDENCE/S11/trivy-image.txt myapp:latest
   ```
 
-- **Отчёт(ы):** `EVIDENCE/policy-YYYY-MM-DD.txt`, `EVIDENCE/trivy-YYYY-MM-DD.txt`, …
-- **Выводы:** TODO: какие правила нарушены/исправлены
+- **Отчёты:**
+
+  - Config scan: `EVIDENCE/S12/trivy-config.txt`
+  - Image scan: `EVIDENCE/S12/trivy-image.txt`
+
+- **Выводы:**
+
+  1. Container/Image findings (HIGH):
+
+     - CVE-2024-47874 в starlette 0.37.2 (DoS via multipart/form-data)
+     - Dockerfile: нет USER (non-root) директивы
+     - Отсутствует HEALTHCHECK
+
+  2. K8s configuration findings (HIGH):
+
+     - readOnlyRootFilesystem не установлен
+     - Используется root пользователь (securityContext.runAsUser: 0)
+     - Отсутствуют resource limits
+     - Используется latest tag
+     - Нет liveness/readiness probes
+     - NetworkPolicy не определена
+
+  3. Actions:
+     - Обновить starlette до 0.40.0
+     - Добавить non-root USER в Dockerfile
+     - Настроить SecurityContext в k8s (non-root, readonly fs)
+     - Добавить resource limits и probes
+     - Использовать фиксированные теги образов
+     - Определить NetworkPolicy
+
+- **Owner/Status:**
+  - Container/Image fixes: Backend Team (open)
+  - K8s configuration: DevOps Team (open)
+  - Priority: HIGH (критичные находки по безопасности контейнеров)
 
 ---
 
