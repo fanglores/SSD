@@ -1,0 +1,71 @@
+
+Report Summary
+
+┌─────────────────────┬────────────┬───────────────────┐
+│       Target        │    Type    │ Misconfigurations │
+├─────────────────────┼────────────┼───────────────────┤
+│ Dockerfile          │ dockerfile │         1         │
+├─────────────────────┼────────────┼───────────────────┤
+│ iac/k8s/deploy.yaml │ kubernetes │         2         │
+├─────────────────────┼────────────┼───────────────────┤
+│ iac/terraform       │ terraform  │         0         │
+└─────────────────────┴────────────┴───────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+Dockerfile (dockerfile)
+=======================
+Tests: 20 (SUCCESSES: 19, FAILURES: 1)
+Failures: 1 (HIGH: 1, CRITICAL: 0)
+
+AVD-DS-0002 (HIGH): Specify at least 1 USER command in Dockerfile with non-root user as argument
+════════════════════════════════════════
+Running containers with 'root' user can lead to a container escape situation. It is a best practice to run containers as non-root users, which can be done by adding a 'USER' statement to the Dockerfile.
+
+See https://avd.aquasec.com/misconfig/ds002
+────────────────────────────────────────
+
+
+
+iac/k8s/deploy.yaml (kubernetes)
+================================
+Tests: 22 (SUCCESSES: 20, FAILURES: 2)
+Failures: 2 (HIGH: 2, CRITICAL: 0)
+
+AVD-KSV-0014 (HIGH): Container 'web' of Deployment 's09s12-web' should set 'securityContext.readOnlyRootFilesystem' to true
+════════════════════════════════════════
+An immutable root file system prevents applications from writing to their local disk. This can limit intrusions, as attackers will not be able to tamper with the file system or write foreign executables to disk.
+
+See https://avd.aquasec.com/misconfig/ksv014
+────────────────────────────────────────
+ iac/k8s/deploy.yaml:14-19
+────────────────────────────────────────
+  14 ┌         - name: web
+  15 │           image: s09s12-app:latest # intentionally 'latest'
+  16 │           ports: [{ containerPort: 8080 }]
+  17 │           securityContext:
+  18 │             runAsUser: 0            # intentionally root
+  19 └           resources: {}             # no limits/requests
+────────────────────────────────────────
+
+
+AVD-KSV-0118 (HIGH): deployment s09s12-web in default namespace is using the default security context, which allows root privileges
+════════════════════════════════════════
+Security context controls the allocation of security parameters for the pod/container/volume, ensuring the appropriate level of protection. Relying on default security context may expose vulnerabilities to potential attacks that rely on privileged access.
+
+See https://avd.aquasec.com/misconfig/ksv118
+────────────────────────────────────────
+ iac/k8s/deploy.yaml:13-19
+────────────────────────────────────────
+  13 ┌       containers:
+  14 │         - name: web
+  15 │           image: s09s12-app:latest # intentionally 'latest'
+  16 │           ports: [{ containerPort: 8080 }]
+  17 │           securityContext:
+  18 │             runAsUser: 0            # intentionally root
+  19 └           resources: {}             # no limits/requests
+────────────────────────────────────────
+
+
